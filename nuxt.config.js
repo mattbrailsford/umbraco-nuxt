@@ -1,3 +1,6 @@
+const UmbracoHeadless = require('umbraco-headless')
+const umbracoConfig = require('./umbraco.config')
+
 module.exports = {
   /*
   ** Headers of the page
@@ -13,11 +16,15 @@ module.exports = {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
+
   /*
   ** Customize the progress bar color
   */
   loading: { color: '#3B8070' },
 
+  /*
+  ** Import plugins
+  */
   plugins: [
     '@/plugins/umbraco-headless',
     '@/plugins/components',
@@ -27,11 +34,10 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    /*
-    ** Run ESLint on save
-    */
+
     extend (config, { isDev, isClient }) {
       
+      // Fixes some webback issues???
       config.node = {
         console: true, 
         fs: 'empty',
@@ -39,6 +45,7 @@ module.exports = {
         tls:'empty',
       }
 
+      // Run ESLint on save
       if (isDev && isClient) {
         config.module.rules.push({
           enforce: 'pre',
@@ -47,6 +54,53 @@ module.exports = {
           exclude: /(node_modules)/
         })
       }
+
+    }
+  },
+
+  /*
+  ** Generate configuration
+  */
+  generate: {
+    routes (callback) {
+
+      let routes = [];
+
+      let umbraco = new UmbracoHeadless.HeadlessService(umbracoConfig);
+      umbraco.authenticate().then(() => {
+
+        // Get the homepage
+        umbraco.query('/root/home', 'XPath').getAll().then(homeResponse => {
+
+          let homeNode = homeResponse.results[0];
+
+          routes.push({
+            route: homeNode.url,
+            payload: homeNode
+          })
+
+          if (homeNode.hasChildren) {
+
+            umbraco.getDescendants(homeNode).then(descendantsResponse => {
+
+              descendantsResponse.results.forEach(node => {
+                routes.push({
+                  route: node.url,
+                  payload: node
+                })
+              });
+
+              callback(null, routes);
+
+            })
+            
+          } else {
+            callback(null, routes);
+          }
+
+        })
+
+      }).catch(callback)
 
     }
   }

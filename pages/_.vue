@@ -6,7 +6,14 @@
 
 <script>
 export default {
-  async asyncData ({ app, route }) {
+  async asyncData ({ app, route, payload }) {
+    
+    // If there is a cached payload, use that
+    if (payload) {
+      return { content: payload };
+    }
+
+    // No payload so lookup the page contents from the endpoint
     let query = '/root/home';
     let cleanPath = route.path.replace(/^\/+|\/+$/g, '');
     if (cleanPath) {
@@ -25,6 +32,7 @@ export default {
         ? res.results[0]
         : null
     }
+
   }
 }
 </script>
