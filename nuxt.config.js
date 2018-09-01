@@ -31,6 +31,13 @@ module.exports = {
   ],
 
   /*
+  ** Middleware
+  */
+  router: {
+    middleware: 'preview-middleware'
+  },
+
+  /*
   ** Build configuration
   */
   build: {
@@ -67,38 +74,37 @@ module.exports = {
       let routes = [];
 
       let umbraco = new UmbracoHeadless.HeadlessService(umbracoConfig);
-      umbraco.authenticate().then(() => {
+      umbraco.IsAuthenticated = true;
+      umbraco.BaseUrl = umbracoConfig.url;
 
-        // Get the homepage
-        umbraco.query('/root/home', 'XPath').getAll().then(homeResponse => {
+      // Get the homepage
+      umbraco.query('/root/home', 'XPath').getAll().then(homeResponse => {
 
-          let homeNode = homeResponse.results[0];
+        let homeNode = homeResponse.results[0];
 
-          routes.push({
-            route: homeNode.url,
-            payload: homeNode
-          })
-
-          if (homeNode.hasChildren) {
-
-            umbraco.getDescendants(homeNode).then(descendantsResponse => {
-
-              descendantsResponse.results.forEach(node => {
-                routes.push({
-                  route: node.url,
-                  payload: node
-                })
-              });
-
-              callback(null, routes);
-
-            })
-            
-          } else {
-            callback(null, routes);
-          }
-
+        routes.push({
+          route: homeNode.url,
+          payload: homeNode
         })
+
+        if (homeNode.hasChildren) {
+
+          umbraco.getDescendants(homeNode).then(descendantsResponse => {
+
+            descendantsResponse.results.forEach(node => {
+              routes.push({
+                route: node.url,
+                payload: node
+              })
+            });
+
+            callback(null, routes);
+
+          })
+          
+        } else {
+          callback(null, routes);
+        }
 
       }).catch(callback)
 

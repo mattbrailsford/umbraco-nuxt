@@ -26,7 +26,7 @@ export default {
       }, query);
     }
     const res = await app.$umbraco.query(query, 'XPath').getAll();
-    //console.log(res.results[0])
+    //console.log(res)
     return {
       content: (res && res.totalResults == 1)
         ? res.results[0]
