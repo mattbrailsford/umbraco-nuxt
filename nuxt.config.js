@@ -17,6 +17,12 @@ module.exports = {
   ** Customize the progress bar color
   */
   loading: { color: '#3B8070' },
+
+  plugins: [
+    '@/plugins/umbraco-headless',
+    '@/plugins/components',
+  ],
+
   /*
   ** Build configuration
   */
@@ -25,6 +31,14 @@ module.exports = {
     ** Run ESLint on save
     */
     extend (config, { isDev, isClient }) {
+      
+      config.node = {
+        console: true, 
+        fs: 'empty',
+        net:'empty',
+        tls:'empty',
+      }
+
       if (isDev && isClient) {
         config.module.rules.push({
           enforce: 'pre',
@@ -33,6 +47,7 @@ module.exports = {
           exclude: /(node_modules)/
         })
       }
+
     }
   }
 }

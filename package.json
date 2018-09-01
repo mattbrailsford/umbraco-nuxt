@@ -13,7 +13,9 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
-    "nuxt": "^1.0.0"
+    "axios": "^0.18.0",
+    "nuxt": "^1.0.0",
+    "umbraco-headless": "^0.1.4"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
