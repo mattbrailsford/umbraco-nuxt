@@ -7,7 +7,11 @@
 <script>
 export default {
   async fetch({ store, route, payload }) {
-    await store.dispatch('pageData/ensurePageData', route.path);
+    if (payload) {
+      store.commit('pageData/setPageData', payload);
+    } else {
+      await store.dispatch('pageData/loadPageData', route.path);
+    }
   },
   computed: {
     pageData: function () {
