@@ -1,6 +1,0 @@
-module.exports = {
-    url: "https://domain.s1.umbraco.io",
-    username: "email@umbraco.com",
-    password: "secret",
-    imageBaseUrl: "https://domain.s1.umbraco.io"
-};
