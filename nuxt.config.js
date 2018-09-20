@@ -27,7 +27,7 @@ module.exports = {
   */
   plugins: [
     '@/plugins/umbraco-headless',
-    '@/plugins/components',
+    '@/plugins/components'
   ],
 
   /*
