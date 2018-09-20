@@ -9,6 +9,3 @@ npm-debug.log
 
 # Nuxt generate
 dist
-
-# Sensitive umbraco info
-umbraco.config.js
