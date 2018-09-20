@@ -1,6 +1,11 @@
 <template>
   <div>
     <header>Header</header>
+    <ul>
+      <li><nuxt-link to="/">Home</nuxt-link></li>
+      <li><nuxt-link to="/news/">News</nuxt-link></li>
+      <li><nuxt-link to="/news/test-news-item/">News Article</nuxt-link></li>
+    </ul>
     <nuxt/>
     <footer>Footer</footer>
   </div>
