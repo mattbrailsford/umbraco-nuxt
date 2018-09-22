@@ -32,7 +32,7 @@ export const actions = {
             commit('setPageModel', { url, model: res.results[0] })
         }
     },
-    setPageModel({ commit }, url, model) {
+    setPageModel({ commit }, { url, model }) {
         commit('setPageModel', { url, model })
     }
 }
