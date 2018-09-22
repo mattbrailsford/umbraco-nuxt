@@ -1,10 +1,10 @@
 <template>
-  <h1>NEWS PAGE: {{ content.name }}</h1>
+  <h1>NEWS PAGE: {{ model.name }}</h1>
 </template>
 
 <script>
 export default {
-  props:['content']
+  props:['model']
 }
 </script>
 

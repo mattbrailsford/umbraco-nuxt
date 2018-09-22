@@ -1,24 +1,21 @@
 export const state = () => ({
-    pageData: {}
+    pageModels: {}
 })
   
 export const mutations = {
-    setAllPageData (state, data) {
-        data.forEach(d => {
-            this.setPageData(state, d)
-        });
-    },
-    setPageData (state, data) {
-        state.pageData[data.url] = data;
+    setPageModel (state, { url, model }) {
+        state.pageModels[url] = model;
     }
 }
 
 export const getters = {
-    getPageData: state => (url) => state.pageData[url]
+    getPageModel: state => (url) => state.pageModels.hasOwnProperty(url)
+        ? state.pageModels[url]
+        : null
 }
 
 export const actions = {
-    async loadPageData({ commit }, url) {
+    async loadPageModel({ commit }, url) {
         let query = '/root/home';
         let cleanUrl = url.replace(/^\/+|\/+$/g, '');
         if (cleanUrl) {
@@ -32,7 +29,10 @@ export const actions = {
         }
         let res = await this.$umbraco.query(query, 'XPath').getAll();
         if (res && res.totalResults == 1){
-            commit('setPageData', res.results[0])
+            commit('setPageModel', { url, model: res.results[0] })
         }
+    },
+    setPageModel({ commit }, url, model) {
+        commit('setPageModel', { url, model })
     }
 }
