@@ -1,5 +1,4 @@
-const UmbracoHeadless = require('umbraco-headless')
-const umbracoConfig = require('./umbraco.config')
+const UmbracoHeadless = require('./services/umbraco-headless')
 
 module.exports = {
   /*
@@ -80,38 +79,17 @@ module.exports = {
 
       let routes = [];
 
-      let umbraco = new UmbracoHeadless.HeadlessService(umbracoConfig);
-      umbraco.IsAuthenticated = true;
-      umbraco.BaseUrl = umbracoConfig.url;
+      let umbraco = UmbracoHeadless.createClient();
+      umbraco.query('/root//*[@isDoc]', 'XPath').getAll().then(resp => {
 
-      // Get the homepage
-      umbraco.query('/root/home', 'XPath').getAll().then(homeResponse => {
-
-        let homeNode = homeResponse.results[0];
-
-        routes.push({
-          route: homeNode.url,
-          payload: homeNode
-        })
-
-        if (homeNode.hasChildren) {
-
-          umbraco.getDescendants(homeNode).then(descendantsResponse => {
-
-            descendantsResponse.results.forEach(node => {
-              routes.push({
-                route: node.url,
-                payload: node
-              })
-            });
-
-            callback(null, routes);
-
+        resp.results.forEach(node => {
+          routes.push({
+            route: node.url,
+            payload: node
           })
-          
-        } else {
-          callback(null, routes);
-        }
+        });
+
+        callback(null, routes);
 
       }).catch(callback)
 
